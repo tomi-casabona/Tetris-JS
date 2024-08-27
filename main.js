@@ -56,9 +56,62 @@ canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
 
 context.scale(BLOCK_SIZE, BLOCK_SIZE);
 
+const PIECES = [
+  [
+    [1, 1],
+    [1, 1],
+  ],
+  [[1, 1, 1, 1]],
+  [
+    [0, 1],
+    [0, 1],
+    [1, 1],
+  ],
+  [
+    [1, 0],
+    [1, 0],
+    [1, 1],
+  ],
+  [
+    [0, 1, 0],
+    [1, 1, 1],
+  ],
+  [
+    [1, 1, 0],
+    [0, 1, 1],
+  ],
+];
 //2) Game loop
 
-function update() {
+// function update() {
+//   draw();
+//   window.requestAnimationFrame(update);
+// }
+
+//8 autodrop
+
+// function update() {
+//   draw();
+//   window.requestAnimationFrame(update);
+// }
+
+let dropCounter = 0;
+let lastTime = 0;
+function update(time = 0) {
+  const deltaTime = time - lastTime;
+  lastTime = time;
+
+  dropCounter += deltaTime;
+
+  if (dropCounter > 1000) {
+    piece.position.y++;
+    dropCounter = 0;
+    if (checkCollition()) {
+      piece.position.y--;
+      solidifyPiece();
+      removeRows();
+    }
+  }
   draw();
   window.requestAnimationFrame(update);
 }
@@ -144,14 +197,15 @@ function checkCollition() {
 }
 
 function solidifyPiece() {
-  piece.shape.forEach((row, x) => {
-    row.forEach((value, y) => {
+  piece.shape.forEach((row, y) => {
+    row.forEach((value, x) => {
       if (value === 1) {
         board[y + piece.position.y][x + piece.position.x] = 1;
       }
     });
   });
-  piece.position.x = 0;
+  piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)];
+  piece.position.x = BOARD_WIDTH / 2 - 1;
   piece.position.y = 0;
 }
 
