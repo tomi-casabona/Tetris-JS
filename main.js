@@ -39,7 +39,7 @@ const board = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 // 1) inicializar el canvas
@@ -81,6 +81,8 @@ const PIECES = [
     [0, 1, 1],
   ],
 ];
+
+let score = 0;
 //2) Game loop
 
 // function update() {
@@ -154,6 +156,7 @@ function removeRows() {
     board.splice(y, 1);
     const newRow = Array(BOARD_WIDTH).fill(0);
     board.unshift(newRow);
+    score += 10;
   });
 }
 
@@ -170,18 +173,29 @@ document.addEventListener("keydown", (event) => {
       piece.position.x--;
     }
   }
-  if (event.key === "ArrowUp") {
-    piece.position.y--;
-    if (checkCollition()) {
-      piece.position.y++;
-    }
-  }
   if (event.key === "ArrowDown") {
     piece.position.y++;
     if (checkCollition()) {
       piece.position.y--;
       solidifyPiece();
       removeRows();
+    }
+  }
+  if (event.key === "ArrowUp") {
+    const rotated = [];
+
+    for (let i = 0; i < piece.shape[0].length; i++) {
+      const row = [];
+
+      for (let j = piece.shape.length - 1; j >= 0; j--) {
+        row.push(piece.shape[j][i]);
+      }
+      rotated.push(row);
+    }
+    const previousShape = piece.shape;
+    piece.shape = rotated;
+    if (checkCollition()) {
+      piece.shape = previousShape;
     }
   }
 });
@@ -207,6 +221,13 @@ function solidifyPiece() {
   piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)];
   piece.position.x = BOARD_WIDTH / 2 - 1;
   piece.position.y = 0;
+
+  // Game over
+
+  if (checkCollition()) {
+    window.alert("Game Over!!!");
+    board.forEach((row) => row.fill(0));
+  }
 }
 
 update();
