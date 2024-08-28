@@ -17,5 +17,15 @@ body {
   padding: 0;
   display: grid;
   place-content: center;
-  height: 100vh; 
+  height: 100vh;
+}
+
+section {
+  position: absolute;
+  background: black;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  font-size: 48px;
+  place-content: center;
 }

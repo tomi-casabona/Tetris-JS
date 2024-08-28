@@ -1,4 +1,7 @@
 import "./style.css";
+import { BOARD_HEIGHT, BOARD_WIDTH, BLOCK_SIZE } from "./public/const";
+import { EVENT_MOVEMENTS } from "./public/const";
+
 //4 pieza actual
 
 const piece = {
@@ -13,9 +16,7 @@ const piece = {
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 const $score = document.querySelector("span");
-const BLOCK_SIZE = 20;
-const BOARD_WIDTH = 14;
-const BOARD_HEIGHT = 30;
+const $section = document.querySelector("section");
 
 function createBoard(width, height) {
   return Array(height)
@@ -141,19 +142,19 @@ function removeRows() {
 }
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") {
+  if (event.key === EVENT_MOVEMENTS.LEFT) {
     piece.position.x--;
     if (checkCollition()) {
       piece.position.x++;
     }
   }
-  if (event.key === "ArrowRight") {
+  if (event.key === EVENT_MOVEMENTS.RIGHT) {
     piece.position.x++;
     if (checkCollition()) {
       piece.position.x--;
     }
   }
-  if (event.key === "ArrowDown") {
+  if (event.key === EVENT_MOVEMENTS.DOWN) {
     piece.position.y++;
     if (checkCollition()) {
       piece.position.y--;
@@ -161,7 +162,7 @@ document.addEventListener("keydown", (event) => {
       removeRows();
     }
   }
-  if (event.key === "ArrowUp") {
+  if (event.key === EVENT_MOVEMENTS.UP) {
     const rotated = [];
 
     for (let i = 0; i < piece.shape[0].length; i++) {
@@ -210,6 +211,11 @@ function solidifyPiece() {
   }
 }
 
-update();
+$section.addEventListener("click", () => {
+  update();
 
-//3) Board
+  $section.remove();
+  const audio = new Audio("/tetris.mp3");
+  audio.volume = 0.5;
+  audio.play();
+});
