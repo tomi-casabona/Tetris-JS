@@ -1,18 +1,21 @@
 import "./style.css";
 import { BOARD_HEIGHT, BOARD_WIDTH, BLOCK_SIZE } from "./public/const";
 import { EVENT_MOVEMENTS } from "./public/const";
-import { canvas, context, $score, $start, $pause } from "./public/const";
+import { canvas, context, $score, $start, $pause, audio } from "./public/const";
 import { piece, PIECES } from "./public/const";
 import { board } from "./public/helpers/createBoard";
 
 canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
 context.scale(BLOCK_SIZE, BLOCK_SIZE);
+audio.volume = 0.5;
+audio.loop = true;
 
 let score = 0;
 let dropCounter = 0;
 let lastTime = 0;
 let isPaused = false;
+let isStarted = false;
 
 function update(time = 0) {
   if (isPaused) return;
@@ -149,24 +152,34 @@ function solidifyPiece() {
     board.forEach((row) => row.fill(0));
   }
 }
+function startGame() {
+  update();
+  $start.remove();
+  audio.play();
+}
 
 $start.addEventListener("click", () => {
-  update();
-
-  $start.remove();
-
-  const audio = new Audio("/tetris.mp3");
-  audio.volume = 0.5;
-  audio.play();
+  startGame();
 });
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    isPaused = !isPaused;
-    $pause.style.display = isPaused ? "grid" : "none";
-    
-    if (!isPaused) {
-      update();
+    if (isStarted === false) {
+      startGame();
+      isStarted = true;
+    } else {
+      isPaused = !isPaused;
+
+      if (isPaused) {
+        $pause.style.display = "grid";
+        audio.pause();
+      }
+      if (!isPaused) {
+        $pause.style.display = "none";
+
+        update();
+        audio.play();
+      }
     }
   }
 });

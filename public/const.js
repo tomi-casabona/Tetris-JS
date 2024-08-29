@@ -60,3 +60,5 @@ export const EVENT_MOVEMENTS = {
   DOWN: "ArrowDown",
   UP: "ArrowUp",
 };
+
+export const audio = new Audio("/tetris.mp3");
