@@ -5,6 +5,10 @@ import { canvas, context, $score, $start, $pause, audio } from "./public/const";
 import { piece, PIECES } from "./public/const";
 import { board } from "./public/helpers/createBoard";
 
+// TODO : timer.
+// TODO : proxima ficha.
+// TODO : nombre jugador.
+
 canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
 context.scale(BLOCK_SIZE, BLOCK_SIZE);
@@ -82,6 +86,7 @@ function removeRows() {
     score += 10;
   });
 }
+
 // on key down
 document.addEventListener("keydown", (event) => {
   if (event.key === EVENT_MOVEMENTS.LEFT) {
@@ -158,8 +163,24 @@ function startGame() {
   audio.play();
 }
 
-$start.addEventListener("click", () => {
-  startGame();
+document.addEventListener("click", () => {
+  if (isStarted === false) {
+    startGame();
+    isStarted = true;
+  } else {
+    isPaused = !isPaused;
+
+    if (isPaused) {
+      $pause.style.display = "grid";
+      audio.pause();
+    }
+    if (!isPaused) {
+      $pause.style.display = "none";
+
+      update();
+      audio.play();
+    }
+  }
 });
 
 document.addEventListener("keydown", (event) => {
