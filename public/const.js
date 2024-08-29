@@ -2,7 +2,7 @@
 
 export const canvas = document.querySelector("canvas");
 export const context = canvas.getContext("2d");
-export const $score = document.querySelector("span");
+export const $score = document.getElementById("score");
 export const $start = document.getElementById("start");
 export const $pause = document.getElementById("paused");
 
