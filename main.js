@@ -1,84 +1,22 @@
 import "./style.css";
 import { BOARD_HEIGHT, BOARD_WIDTH, BLOCK_SIZE } from "./public/const";
 import { EVENT_MOVEMENTS } from "./public/const";
-
-//4 pieza actual
-
-const piece = {
-  position: { x: 5, y: 5 },
-  shape: [
-    [1, 1],
-    [1, 1],
-  ],
-};
-
-// 1) inicializar el canvas
-const canvas = document.querySelector("canvas");
-const context = canvas.getContext("2d");
-const $score = document.querySelector("span");
-const $section = document.querySelector("section");
-
-function createBoard(width, height) {
-  return Array(height)
-    .fill()
-    .map(() => Array(width).fill(0));
-}
-
-const board = createBoard(BOARD_WIDTH, BOARD_HEIGHT);
+import { canvas, context, $score, $start, $pause } from "./public/const";
+import { piece, PIECES } from "./public/const";
+import { board } from "./public/helpers/createBoard";
 
 canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
-
 context.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-const PIECES = [
-  [
-    [1, 1],
-    [1, 1],
-  ],
-  [[1, 1, 1, 1]],
-  [
-    [0, 1],
-    [0, 1],
-    [1, 1],
-  ],
-  [
-    [1, 0],
-    [1, 0],
-    [1, 1],
-  ],
-  [
-    [0, 1, 0],
-    [1, 1, 1],
-  ],
-  [
-    [1, 1, 0],
-    [0, 1, 1],
-  ],
-  [
-    [0, 1, 1],
-    [1, 1, 0],
-  ],
-];
-
 let score = 0;
-//2) Game loop
-
-// function update() {
-//   draw();
-//   window.requestAnimationFrame(update);
-// }
-
-//8 autodrop
-
-// function update() {
-//   draw();
-//   window.requestAnimationFrame(update);
-// }
-
 let dropCounter = 0;
 let lastTime = 0;
+let isPaused = false;
+
 function update(time = 0) {
+  if (isPaused) return;
+
   const deltaTime = time - lastTime;
   lastTime = time;
 
@@ -87,6 +25,7 @@ function update(time = 0) {
   if (dropCounter > 1000) {
     piece.position.y++;
     dropCounter = 0;
+
     if (checkCollition()) {
       piece.position.y--;
       solidifyPiece();
@@ -140,7 +79,7 @@ function removeRows() {
     score += 10;
   });
 }
-
+// on key down
 document.addEventListener("keydown", (event) => {
   if (event.key === EVENT_MOVEMENTS.LEFT) {
     piece.position.x--;
@@ -211,11 +150,23 @@ function solidifyPiece() {
   }
 }
 
-$section.addEventListener("click", () => {
+$start.addEventListener("click", () => {
   update();
 
-  $section.remove();
+  $start.remove();
+
   const audio = new Audio("/tetris.mp3");
   audio.volume = 0.5;
   audio.play();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    isPaused = !isPaused;
+    $pause.style.display = isPaused ? "grid" : "none";
+    
+    if (!isPaused) {
+      update();
+    }
+  }
 });

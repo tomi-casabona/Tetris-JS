@@ -12,7 +12,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-body {
+
+body,
+html {
   margin: 0;
   padding: 0;
   display: grid;
@@ -20,12 +22,28 @@ body {
   height: 100vh;
 }
 
-section {
-  position: absolute;
-  background: black;
-  width: 100vw;
-  height: 100vh;
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#start,
+#paused {
+  position: absolute; /* Posiciona de forma absoluta dentro de #app */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: grid;
   font-size: 48px;
   place-content: center;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  margin: 0;
+}
+
+#paused {
+  display: none;
 }
