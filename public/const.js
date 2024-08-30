@@ -1,13 +1,12 @@
-
 export const canvas = document.querySelector("canvas");
 export const context = canvas.getContext("2d");
 export const $score = document.getElementById("score");
 export const $start = document.getElementById("start");
 export const $pause = document.getElementById("paused");
+export const $gameOver = document.getElementById("gameOver");
 export const BLOCK_SIZE = 20;
 export const BOARD_WIDTH = 14;
 export const BOARD_HEIGHT = 30;
-
 
 export const piece = {
   position: { x: 6, y: 0 },

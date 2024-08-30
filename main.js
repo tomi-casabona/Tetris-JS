@@ -21,7 +21,6 @@ audio.loop = true;
 
 let dropCounter = 0;
 let lastTime = 0;
-let isPaused = true;
 
 // Actualiza el juego
 export function update(time = 0) {
@@ -36,8 +35,8 @@ export function update(time = 0) {
 
     if (checkCollition(piece, board)) {
       piece.position.y--;
-      solidifyPiece(piece);
-      removeRows(board, updateScore);
+      solidifyPiece(piece, board);
+      removeRows(board);
       updateScore();
     }
   }
@@ -45,6 +44,7 @@ export function update(time = 0) {
   draw(context, board, piece, canvas);
   window.requestAnimationFrame(update);
 }
+
 handleGameControls(startGame, pauseGame, resumeGame);
 
 document.addEventListener("keydown", (event) => {

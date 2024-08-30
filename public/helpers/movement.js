@@ -21,7 +21,7 @@ export function handleMovement(event, piece, board) {
     piece.position.y++;
     if (checkCollition(piece, board)) {
       piece.position.y--;
-      solidifyPiece(piece);
+      solidifyPiece(piece, board);
       removeRows(board, updateScore);
     }
   }

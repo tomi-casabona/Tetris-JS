@@ -29,7 +29,8 @@ html {
 }
 
 #start,
-#paused {
+#paused,
+#gameOver {
   position: absolute; /* Posiciona de forma absoluta dentro de #app */
   top: 0;
   left: 0;
@@ -44,6 +45,7 @@ html {
   margin: 0;
 }
 
-#paused {
+#paused,
+#gameOver {
   display: none;
 }

@@ -5,7 +5,7 @@ export function draw(context, board, piece, canvas) {
   board.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value === 1) {
-        context.fillStyle = "yellow";
+        context.fillStyle = "red";
         context.fillRect(x, y, 1, 1);
       }
     });
@@ -14,10 +14,9 @@ export function draw(context, board, piece, canvas) {
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value) {
-        context.fillStyle = "red";
+        context.fillStyle = "green";
         context.fillRect(x + piece.position.x, y + piece.position.y, 1, 1);
       }
     });
   });
-
 }

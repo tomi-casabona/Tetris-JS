@@ -1,6 +1,6 @@
 import { BOARD_WIDTH } from "../const";
 
-export function removeRows(board, updateScore) {
+export function removeRows(board) {
   const rowsToRemove = [];
 
   board.forEach((row, y) => {
@@ -13,6 +13,5 @@ export function removeRows(board, updateScore) {
     board.splice(y, 1);
     const newRow = Array(BOARD_WIDTH).fill(0);
     board.unshift(newRow);
-    updateScore();
   });
 }
