@@ -4,18 +4,11 @@ import { EVENT_MOVEMENTS } from "./public/const";
 import { canvas, context, $pause, audio, $start } from "./public/const";
 import { piece } from "./public/const";
 import { board } from "./public/helpers/createBoard";
-//import { update } from "./public/helpers/update";
 import { checkCollition } from "./public/helpers/checkCollition";
 import { removeRows } from "./public/helpers/removeRows";
 import { solidifyPiece } from "./public/helpers/solidifyPiece";
-//import { startGame } from "./public/helpers/startGame";
 import { updateScore } from "./public/helpers/updateScore";
 import { draw } from "./public/helpers/draw";
-
-// TODO : REFACTORICE !!!
-// TODO : timer.
-// TODO : proxima ficha.
-// TODO : nombre jugador.
 
 canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
@@ -24,18 +17,26 @@ audio.volume = 0.3;
 audio.loop = true;
 
 let isStarted = false;
-
-// Variables globales (o de módulo)
 let dropCounter = 0;
 let lastTime = 0;
-let isPaused = true; // Asume que el juego comienza en pausa
+let isPaused = true;
+let startTime = 0;
+let elapsedTime = 0;
+let timerInterval;
 
+function updateTimer() {
+  if (!isPaused) {
+    const currentTime = performance.now();
+    elapsedTime = Math.floor((currentTime - startTime) / 1000); // Tiempo en segundos
+    document.getElementById("timer").innerText = `${elapsedTime} segundos`;
+  }
+}
+
+// Actualiza el juego
 export function update(time = 0) {
   if (isPaused) return;
-
   const deltaTime = time - lastTime;
   lastTime = time;
-
   dropCounter += deltaTime;
 
   if (dropCounter > 1000) {
@@ -51,6 +52,7 @@ export function update(time = 0) {
   }
 
   draw(context, board, piece, canvas);
+  updateTimer(); // Actualiza el temporizador
   window.requestAnimationFrame(update);
 }
 
@@ -59,6 +61,7 @@ export function startGame() {
   isPaused = false;
   $start.remove();
   lastTime = performance.now(); // Actualiza lastTime cuando se inicia o reanuda
+  startTime = performance.now(); // Inicia el temporizador
   dropCounter = 0; // Reinicia el contador de caída
   window.requestAnimationFrame(update);
 }
@@ -66,13 +69,20 @@ export function startGame() {
 // Función para pausar el juego
 export function pauseGame() {
   isPaused = true;
+  clearInterval(timerInterval); // Detén el temporizador al pausar el juego
 }
 
-// on click y on keydown for pause or start
+// Función para reanudar el juego
+export function resumeGame() {
+  isPaused = false;
+  startTime = performance.now() - elapsedTime * 1000; // Ajusta el tiempo de inicio al tiempo transcurrido
+  timerInterval = setInterval(updateTimer, 1000); // Reanuda el temporizador
+}
+
+// on click y on keydown para pausar o iniciar
 document.addEventListener("click", () => {
   if (isStarted === false) {
     startGame();
-
     isStarted = true;
   } else {
     isPaused = !isPaused;
@@ -80,9 +90,10 @@ document.addEventListener("click", () => {
     if (isPaused) {
       $pause.style.display = "grid";
       audio.pause();
+      pauseGame(); // Pausa el juego y el temporizador
     } else {
       $pause.style.display = "none";
-      update();
+      resumeGame(); // Reanuda el juego y el temporizador
       audio.play();
     }
   }
@@ -99,18 +110,17 @@ document.addEventListener("keydown", (event) => {
       if (isPaused) {
         $pause.style.display = "grid";
         audio.pause();
+        pauseGame(); // Pausa el juego y el temporizador
       } else {
         $pause.style.display = "none";
-        dropCounter = 0;
-        lastTime = performance.now(); // Reiniciar lastTime al reanudar
-        update();
+        resumeGame(); // Reanuda el juego y el temporizador
         audio.play();
       }
     }
   }
 });
 
-// on key down for move
+// on key down para mover
 document.addEventListener("keydown", (event) => {
   if (event.key === EVENT_MOVEMENTS.LEFT) {
     piece.position.x--;
@@ -148,5 +158,12 @@ document.addEventListener("keydown", (event) => {
     if (checkCollition(piece, board)) {
       piece.shape = previousShape;
     }
+  }
+});
+
+// Recargar página
+document.addEventListener("keydown", (event) => {
+  if (event.key === "r") {
+    window.location.reload();
   }
 });
