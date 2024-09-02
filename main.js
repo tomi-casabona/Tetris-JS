@@ -1,6 +1,6 @@
 import "./style.css";
-import { BOARD_HEIGHT, BOARD_WIDTH, BLOCK_SIZE, $score } from "./public/const";
-import { canvas, context, $pause, audio, $start } from "./public/const";
+import { BOARD_HEIGHT, BOARD_WIDTH, BLOCK_SIZE } from "./public/const";
+import { canvas, context, audio} from "./public/const";
 import { piece } from "./public/const";
 import { board } from "./public/helpers/createBoard";
 import { checkCollition } from "./public/helpers/checkCollition";
@@ -21,10 +21,7 @@ audio.loop = true;
 
 let dropCounter = 0;
 let lastTime = 0;
-let dificult = 1000;
-//todo cambiar de color la fila a remover por 0.5s
 
-// Actualiza el juego
 export function update(time = 0) {
   if (getIsPaused()) return;
   const deltaTime = time - lastTime;
