@@ -18,7 +18,7 @@ Tetris is a puzzle game where the goal is to clear lines by stacking falling blo
 ## Play DEMO on vercel.
 
 Check out the live version of the game deployed on Vercel:
-[Tetris Game on Vercel](https://your-vercel-link.vercel.app)
+[Tetris Game on Vercel](https://tetris-js-tomascasabona.vercel.app/)
 
 ### How to install.
 
