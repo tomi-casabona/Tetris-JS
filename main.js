@@ -33,7 +33,6 @@ export function update(time = 0) {
 
   let difficult = setDifficult();
 
-  console.log(difficult);
   if (dropCounter > difficult) {
     piece.position.y++;
     dropCounter = 0;
