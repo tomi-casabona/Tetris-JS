@@ -1,12 +1,12 @@
 import "./style.css";
-import { BOARD_HEIGHT, BOARD_WIDTH, BLOCK_SIZE } from "./public/const";
+import { BOARD_HEIGHT, BOARD_WIDTH, BLOCK_SIZE, $score } from "./public/const";
 import { canvas, context, $pause, audio, $start } from "./public/const";
 import { piece } from "./public/const";
 import { board } from "./public/helpers/createBoard";
 import { checkCollition } from "./public/helpers/checkCollition";
 import { removeRows } from "./public/helpers/removeRows";
 import { solidifyPiece } from "./public/helpers/solidifyPiece";
-import { updateScore } from "./public/helpers/updateScore";
+import { setDifficult } from "./public/helpers/setDifficult";
 import { draw } from "./public/helpers/draw";
 import { handleGameControls } from "./public/helpers/gameControls";
 import { pauseGame, resumeGame, startGame } from "./public/helpers/timer";
@@ -21,6 +21,8 @@ audio.loop = true;
 
 let dropCounter = 0;
 let lastTime = 0;
+let dificult = 1000;
+//todo cambiar de color la fila a remover por 0.5s
 
 // Actualiza el juego
 export function update(time = 0) {
@@ -29,7 +31,10 @@ export function update(time = 0) {
   lastTime = time;
   dropCounter += deltaTime;
 
-  if (dropCounter > 700) {
+  let difficult = setDifficult();
+
+  console.log(difficult);
+  if (dropCounter > difficult) {
     piece.position.y++;
     dropCounter = 0;
 
@@ -37,7 +42,6 @@ export function update(time = 0) {
       piece.position.y--;
       solidifyPiece(piece, board);
       removeRows(board);
-      updateScore();
     }
   }
 

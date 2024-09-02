@@ -1,4 +1,5 @@
 import { BOARD_WIDTH } from "../const";
+import { updateScore } from "./updateScore";
 
 export function removeRows(board) {
   const rowsToRemove = [];
@@ -6,6 +7,7 @@ export function removeRows(board) {
   board.forEach((row, y) => {
     if (row.every((value) => value === 1)) {
       rowsToRemove.push(y);
+      updateScore();
     }
   });
 
